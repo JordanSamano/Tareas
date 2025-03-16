@@ -1,4 +1,4 @@
-# Inteligencia artificial 11:00 - 12:00
+<h1 align = "center">Inteligencia artificial 11:00 - 12:00<h1>
 <h1 align="center"> 
 Instituto Tecnologico de Culiacan
 
