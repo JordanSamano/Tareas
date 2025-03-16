@@ -1,5 +1,5 @@
 # Inteligencia artificial 11:00 - 12:00
-<h1 align="center"> 
+##<h1 align="center"> 
 Instituto Tecnologico de Culiacan
 Ingenieria en Sistemas Computacionales
 Profesor: Zuriel Dathan Mora Felix
