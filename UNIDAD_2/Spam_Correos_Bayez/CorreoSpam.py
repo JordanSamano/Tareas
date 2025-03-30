@@ -196,24 +196,4 @@ modelo.entrenar(X_train, y_train)
 print("\nEvaluando modelo con datos de prueba...")
 y_pred = [modelo.predecir(correo) for correo in X_test]
 
-# Mostrar reporte en español
 reporte_en_espanol(y_test, y_pred)
-
-# Ejemplo de predicción
-test_messages = [
-    "Free entry to win a prize! Call now!",  # SPAM
-    "Hey, can we meet tomorrow for lunch?",  # NO SPAM
-    "Congratulations! You've won a $1000 gift card",  # SPAM
-    "Please send me the report by EOD",  # NO SPAM
-    "Earn money fast from house",  # SPAM
-    "Meeting tomorrow at 10am"  # NO SPAM
-]
-
-print("\nPREDICCIONES DE EJEMPLO:")
-print("="*50)
-for msg in test_messages:
-    procesado = prep.preprocesar(msg)
-    pred = modelo.predecir(procesado)
-    print(f"Mensaje: '{msg[:50]}...'")
-    print(f"Clasificación: {'SPAM' if pred == 1 else 'NO SPAM'}")
-    print("-"*50)
