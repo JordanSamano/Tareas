@@ -38,3 +38,5 @@
 ## Para finalizar adjuntare fotos del bosquejo y con el experto que nos proporciono la información necesaria para desarrollar el sistema experto:
 ![Bosquejo Trabajo](https://github.com/JordanSamano/Tareas/blob/main/Imagenes/Bosquejo%20Sis%20Exp%201.JPG)
 ![Experto en Cuestión](https://github.com/JordanSamano/Tareas/blob/main/Imagenes/Experto%20en%20cuestion.jpg)
+![Experto en Cuestión1](https://github.com/JordanSamano/Tareas/blob/main/Imagenes/Experto%201.JPG)
+
