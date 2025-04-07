@@ -1,0 +1,99 @@
+:- dynamic objetivo/1.
+:- dynamic gastoEnergetico/1.
+
+
+% Menú principal
+iniciar :-
+    writeln('--- SISTEMA EXPERTO: CAMBIO FISICO ---'),
+    capturarDatosUsuario,
+    writeln('Selecciona tu objetivo:'),
+    writeln('1. Ganar musculo'),
+    writeln('2. Perder grasa'),
+    writeln('3. Ganar resistencia'),
+    read(Opcion),
+    definirObjetivo(Opcion),
+    mostrarRecomendaciones.
+
+
+% Captura de datos y cálculo
+capturarDatosUsuario :-
+    writeln('Ingresa tu peso en kg:'), read(Peso),
+    writeln('Ingresa tu estatura en cm:'), read(Estatura),
+    writeln('Ingresa tu edad:'), read(Edad),
+    writeln('Ingresa tu sexo (hombre o mujer):'), read(Sexo),
+    calcularGastoEnergetico(Peso, Estatura, Edad, Sexo).
+
+calcularGastoEnergetico(Peso, Estatura, Edad, hombre) :-
+    TMB is 66.5 + (13.75 * Peso) + (5.003 * Estatura) - (6.75 * Edad),
+    GET is TMB * 1.55,
+    assertz(gastoEnergetico(GET)),
+    format('Tu gasto energético diario estimado es: ~2f kcal~n', [GET]).
+
+calcularGastoEnergetico(Peso, Estatura, Edad, mujer) :-
+    TMB is 655.1 + (9.563 * Peso) + (1.850 * Estatura) - (4.676 * Edad),
+    GET is TMB * 1.55,
+    assertz(gastoEnergetico(GET)),
+    format('Tu gasto energético diario estimado es: ~2f kcal~n', [GET]).
+
+
+% Objetivo del usuario
+definirObjetivo(1) :- assertz(objetivo(ganarMusculo)).
+definirObjetivo(2) :- assertz(objetivo(perderGrasa)).
+definirObjetivo(3) :- assertz(objetivo(ganarResistencia)).
+definirObjetivo(_) :-
+    writeln('Opción inválida.'), fail.
+
+
+% Reglas
+seCalculaGastoEnergetico :- gastoEnergetico(_).
+alimentacionBuena :- seCalculaGastoEnergetico.
+
+superavitCalorico :- objetivo(ganarMusculo).
+deficitCalorico :- objetivo(perderGrasa).
+
+entrenamientoHipertrofia :- objetivo(ganarMusculo), entrenamientoCargasPesadasModeradas.
+entrenamientoZonaQuema :- objetivo(perderGrasa), entrenamientoRepeticionesAltasModerado, actividadCardio.
+entrenamientoResistencia :- objetivo(ganarResistencia), entrenamientoRepeticionesAltasBajas.
+
+entrenamientoFisico :- entrenamientoHipertrofia.
+entrenamientoFisico :- entrenamientoZonaQuema.
+entrenamientoFisico :- entrenamientoResistencia.
+
+cambioFisico :- alimentacionBuena, entrenamientoFisico.
+
+
+% Hechos de entrenamiento
+
+entrenamientoCargasPesadasModeradas.
+entrenamientoRepeticionesAltasModerado.
+actividadCardio.
+entrenamientoRepeticionesAltasBajas.
+
+
+% Recomendaciones finales
+
+mostrarRecomendaciones :-
+    (superavitCalorico ->
+        writeln('• Necesitas un superávit calórico'),
+        recomendarSuperavit;
+        true),
+    (deficitCalorico ->
+        writeln('• Necesitas un déficit calórico'),
+        recomendarDeficit;
+        true),
+    (entrenamientoHipertrofia -> writeln('• Entrena con cargas pesadas y repeticiones moderadas'); true),
+    (entrenamientoZonaQuema -> writeln('• Entrena con repeticiones altas, peso moderado y haz cardio'); true),
+    (entrenamientoResistencia -> writeln('• Entrena con repeticiones altas y peso bajo'); true),
+    (cambioFisico -> writeln('✅ Con esto, lograrás un cambio físico.'); writeln('❌ No se logrará el cambio físico.')), !.
+
+recomendarDeficit :-
+    gastoEnergetico(GET),
+    Min is GET - 500,
+    Max is GET - 300,
+    format('• Para perder grasa, consume entre ~0f y ~0f kcal por día.~n', [Min, Max]), !.
+
+recomendarSuperavit :-
+    gastoEnergetico(GET),
+    Min is GET + 250,
+    Max is GET + 500,
+    format('• Para ganar músculo, consume entre ~0f y ~0f kcal por día.~n', [Min, Max]), !.
