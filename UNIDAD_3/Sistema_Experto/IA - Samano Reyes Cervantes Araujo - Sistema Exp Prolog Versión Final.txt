@@ -1,0 +1,171 @@
+:- dynamic objetivo/1, enfoque/1, gastoEnergetico/1.
+
+% Menú principal
+iniciar :-
+    writeln('--- SISTEMA EXPERTO: CAMBIO FISICO ---'),
+    capturarDatosUsuario,
+    seleccionarObjetivoPrincipal,
+    seleccionarEnfoqueCorporal,
+    mostrarRecomendaciones.
+
+% Captura de datos biométricos
+capturarDatosUsuario :-
+    writeln('\nIngresa tus datos biométricos:'),
+    writeln('Peso en kg:'), read(Peso),
+    writeln('Estatura en cm:'), read(Estatura),
+    writeln('Edad:'), read(Edad),
+    writeln('Sexo (hombre/mujer):'), read(Sexo),
+    calcularGastoEnergetico(Peso, Estatura, Edad, Sexo).
+
+% Cálculo de gasto energético
+calcularGastoEnergetico(Peso, Estatura, Edad, hombre) :-
+    TMB is 66.5 + (13.75 * Peso) + (5.003 * Estatura) - (6.75 * Edad),
+    GET is TMB * 1.55,
+    assertz(gastoEnergetico(GET)),
+    format('\nTu gasto energético diario (GET): ~2f kcal\n', [GET]).
+
+calcularGastoEnergetico(Peso, Estatura, Edad, mujer) :-
+    TMB is 655.1 + (9.563 * Peso) + (1.850 * Estatura) - (4.676 * Edad),
+    GET is TMB * 1.55,
+    assertz(gastoEnergetico(GET)),
+    format('\nTu gasto energético diario (GET): ~2f kcal\n', [GET]).
+
+% Selección de objetivos
+seleccionarObjetivoPrincipal :-
+    writeln('\nOBJETIVO PRINCIPAL:'),
+    writeln('1. Perder grasa'),
+    writeln('2. Ganar músculo'),
+    writeln('3. Ganar resistencia'),
+    read(Opcion),
+    definirObjetivo(Opcion).
+
+definirObjetivo(1) :- actualizarObjetivo(perderGrasa).
+definirObjetivo(2) :- actualizarObjetivo(ganarMusculo).
+definirObjetivo(3) :- actualizarObjetivo(ganarResistencia).
+definirObjetivo(_) :- writeln('Opción inválida'), fail.
+
+% Selección de enfoque corporal
+seleccionarEnfoqueCorporal :-
+    writeln('\nENFOQUE CORPORAL:'),
+    writeln('1. Tren superior'),
+    writeln('2. Tren inferior'),
+    read(Opcion),
+    definirEnfoque(Opcion).
+
+definirEnfoque(1) :- actualizarEnfoque(trenSuperior).
+definirEnfoque(2) :- actualizarEnfoque(trenInferior).
+definirEnfoque(_) :- writeln('Opción inválida'), fail.
+
+% Actualización de base de conocimientos
+actualizarObjetivo(Objetivo) :-
+    retractall(objetivo(_)),
+    assertz(objetivo(Objetivo)).
+
+actualizarEnfoque(Enfoque) :-
+    retractall(enfoque(_)),
+    assertz(enfoque(Enfoque)).
+
+% Reglas nutricionales
+superavitCalorico :- objetivo(ganarMusculo).
+deficitCalorico :- objetivo(perderGrasa).
+mantenerCalorias :- objetivo(ganarResistencia).
+alimentacionBuena :- gastoEnergetico(_).
+entrenamientoFisico :- objetivo(_).
+
+cambioFisico :- 
+    alimentacionBuena, 
+    entrenamientoFisico,
+    objetivo(_).
+
+% Generación de rutinas
+rutinaEntrenamiento :-
+    objetivo(Objetivo),
+    enfoque(Enfoque),
+    writeln('\n=== RUTINA PERSONALIZADA ==='),
+    entrenamientoObjetivo(Objetivo),
+    entrenamientoEnfoque(Enfoque).
+
+entrenamientoObjetivo(perderGrasa) :-
+    writeln('• Protocolo principal:'),
+    writeln('   - 12-15 repeticiones con peso moderado (60-70% 1RM)'),
+    writeln('   - Cardio 3-5 sesiones/semana (30-45 mins, 60-70% FCM)').
+
+entrenamientoObjetivo(ganarMusculo) :-
+    writeln('• Protocolo principal:'),
+    writeln('   - 6-12 repeticiones con cargas pesadas (80-85% 1RM)'),
+    writeln('   - Descanso entre series: 90-120 segundos').
+
+entrenamientoObjetivo(ganarResistencia) :-
+    writeln('• Protocolo principal:'),
+    writeln('   - 15-20 repeticiones con peso bajo (50-60% 1RM)'),
+    writeln('   - Volumen semanal: 8-10 series/grupo muscular').
+
+entrenamientoEnfoque(trenSuperior) :-
+    writeln('• Ejercicios específicos:'),
+    writeln('Dividir el entrenamiento en 3 sesiones.'),
+    writeln('Pecho/Tricep, Espalda/Biceps y Hombro.'),
+    writeln('• Sesión 1: Pecho/Tricep'),
+    writeln('   - Activación de Manguito rotador'),
+    writeln('   - Pec Fly 4x12'),
+    writeln('   - Press Inclinado 4x12'),
+    writeln('   - Fondos Maquina 3x15'),
+    writeln('   - Polea Cuerda 3x12'),
+    writeln('   - Rompe Craneos 3x15'),
+    writeln('   - Cruzados Polea Alta 3x12'),
+    writeln('• Sesión 2: Espalda/Biceps'),
+    writeln('   - Pull Over 4x12'),
+	writeln('   - Jalon al pecho Agarre Neutro 4x12'),
+    writeln('   - Remo Dorian Unilateral 3x10'),
+    writeln('   - Face Pull 3x12'),
+    writeln('   - Predicador Maquina 3x12 - 10 - 8'),
+    writeln('   - Curl Martillo Polea 3x12'),
+    writeln('   - Curl Martillo Unilateral Mancuerna 3x8'),
+    writeln('• Sesión 3: Hombro'),
+    writeln('   - Activación de manguito rotador'),
+    writeln('   - Elevación Laterales con mancuerna sentado 4x12'),
+    writeln('   - Press militar 4x12 (hombros)'),
+    writeln('   - Pull Face en Polea 3x12 Sosteniendo 3s cada 3 Repeticiones'),
+    writeln('   - Encogimientos pesados 4x10').
+
+entrenamientoEnfoque(trenInferior) :-
+    writeln('• Ejercicios específicos:'),
+    writeln('Una Unica Sesión de Pierna completa cada 2 días de entrenamiento.'),
+    writeln('   - Activacion de cadera y tobillos'),
+    writeln('   - Pantorrilla Maquina parado 4x15'),
+    writeln('   - Pantorrilla Unilateral con Mancuerna 4x12'),
+    writeln('   - Prensa (Pies en el centro) 4 series, 1ra 15, 2da 12, 3ra 10, 4ta 8 repeticiones.'),
+    writeln('   - Sentadilla Libre o Smith 3x12'),
+    writeln('   - Peso Muerto Rumano 4x15-12'),
+    writeln('   - Extensiones de Cuadriceps 4x10'),
+    writeln('   - Curl Femoral Sentado 4x10'),
+    writeln('   - Desplantes 4x25pasos'),
+    writeln('   - Femoral parado maquina 4x10').
+
+% Mostrar recomendaciones finales
+mostrarRecomendaciones :-
+    writeln('\n=== RECOMENDACIONES FINALES ==='),
+    (superavitCalorico -> recomendarSuperavit ; true),
+    (deficitCalorico -> recomendarDeficit ; true),
+    (mantenerCalorias ->  recomendarMantener ; true),
+    rutinaEntrenamiento,
+    verificarFactibilidad.
+
+recomendarSuperavit :-
+    gastoEnergetico(GET),
+    Min is GET + 250,
+    Max is GET + 500,
+    format('• Superávit calórico: ~0f-~0f kcal/día\n', [Min, Max]).
+
+recomendarDeficit :-
+    gastoEnergetico(GET),
+    Min is GET - 500,
+    Max is GET - 300,
+    format('• Déficit calórico: ~0f-~0f kcal/día\n', [Min, Max]).
+recomendarMantener :-
+    gastoEnergetico(GET),
+    format('• Mantén tus Calorias diarias: ~0f kcal/día\n', [GET]).
+
+verificarFactibilidad :-
+    (cambioFisico -> 
+        writeln('\n✅ Plan viable: Cumples con los requisitos básicos') ; 
+        writeln('\n❌ Plan inviable: Revisa tus objetivos y datos')).
