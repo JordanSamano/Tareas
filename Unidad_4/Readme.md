@@ -3,4 +3,4 @@
 
 ### Tarea 1
 #### Esta tarea trata sobre la documentacion del dataset que utilizaremos para el desarrollo de nuestro proyecto final.
-#### Añadimos el codigo en Python de la aumentacion de imagenes mencionado en la documentacion que hicimos de la recoleccion del dataset de las imagenes encontradas en khagel, subimos una parte en one drive la cual agregamos en la documentacion por medio de una liga.
+#### Añadimos el codigo en Python de la aumentacion de imagenes mencionado en la documentacion que hicimos de la recoleccion del dataset de las imagenes encontradas en khagel, el cual pusimos una liga del dataset la cual agregamos en la documentacion.
